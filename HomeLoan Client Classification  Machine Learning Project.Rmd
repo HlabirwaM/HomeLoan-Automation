@@ -1,0 +1,293 @@
+---
+title: "HomeLoan Application Qualification Machine Learning Project"
+author: "Hlabirwa Mashabela"
+date: "2024-06-03"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+1. Load the necceary packages into R:
+
+```{r}
+
+library(tidymodels)
+library(tidyverse)
+library(caret)
+library(kernlab)
+
+```
+
+2. Loading the Dataset into RStudio
+
+```{r}
+# Load the data
+loan_data <- read_csv("loan_data_set.csv")
+head(loan_data)
+
+```
+
+
+3. STEP 3: Data Preparation
+
+In this step, we identifiy data quality issues focusing on the following: a) Irrelevant Features b) Missing Values, c) Outliers, d) Data in different ranges, e) Data skewedness, 
+
+3.a Irrelevant Features
+
+```{r}
+
+# a) Removing the irrelevant feature Load_ID as it wil not add relevant value to the model
+
+loan_data <- loan_data %>% select(-Loan_ID)
+```
+
+
+3.b.1 Identifying Missing Values
+
+```{r}
+
+# b) Checking the number of missing values per variable
+
+missing_values <- loan_data %>% summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  pivot_longer(everything(), names_to = "Variable", values_to = "Number of missing values")
+missing_values
+
+```
+
+3.b.2 Handling missing: we apply basic imputation for replacing missing values with mode for  categorical variables and median for numeric variables
+
+```{r}
+
+# Handling missing numerical and categorical variables with mode and median respectively
+
+loan_data <- loan_data %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(., na.rm = TRUE), .))) %>% 
+  mutate ( across (where(is.character), ~ ifelse(is.na(.), mode(.), .)))
+
+````
+
+
+3.c.1  Visualising outliers using boxplots in the quantitative variables; ApplicantIncome, CoApplicantIncome and LoanAmount
+
+
+```{r}
+
+loan_data %>% ggplot( aes( y = ApplicantIncome)) + geom_boxplot() + theme_classic()
+loan_data %>% ggplot( aes( y = CoapplicantIncome)) + geom_boxplot() + theme_classic()
+loan_data %>% ggplot( aes( y = LoanAmount)) + geom_boxplot() + theme_classic()
+
+
+````
+
+3.c.2 Handling outliers using the boxplot method
+
+```{r}
+
+loan_data <- loan_data %>%
+  mutate(across(where(is.numeric), ~ ifelse(. > quantile(., 0.99), quantile(., 0.99), .)))
+
+`````
+
+3.d Handling data in different ranges using by standardisation method
+
+
+````{r}
+
+# Standardize numerical variables
+
+loan_data <- loan_data %>% mutate(across(where(is.numeric), ~ scale(.) %>% as.numeric()))
+
+head(loan_data)
+````
+
+Preparing the data for modelling 
+
+```{r}
+
+
+# Encoding the target variable into either a zero or 1
+
+
+loan_data <- loan_data %>% mutate( Loan_Status = ifelse( Loan_Status == "Y", 1, 0))
+
+
+# Converting all the Loan_Status into categorical variable
+
+
+loan_data <- loan_data %>% mutate (Loan_Status = as.factor(Loan_Status))
+
+
+#- Splitting the data into training and test datasets:
+
+loan_split <- initial_split( loan_data, prop = 0.8, strata = Loan_Status)
+loan_train <- training(loan_split)
+loan_test <- testing(loan_split)
+
+```
+
+
+
+4. Modeling and Evaluation
+
+We will train and evaluate the following models: Decision Trees, K-Nearest Neighbors (K-NN), Support Vector Machine (SVM)
+and Logistic Regression
+
+
+4.1 Decision Tree Classifier
+
+
+
+```{r}
+
+# Decision Tree Model
+tree_spec <- decision_tree() %>%
+  set_mode("classification") %>%
+  set_engine("rpart")
+
+tree_fit <- tree_spec %>%
+  fit(Loan_Status ~ ., data = loan_train)
+
+tree_preds <- predict(tree_fit, loan_test) %>%
+  bind_cols(loan_test)
+
+# Evaluate Decision Tree
+tree_metrics <- yardstick::metrics(tree_preds, truth = Loan_Status, estimate = .pred_class)
+tree_conf_mat <- yardstick::conf_mat(tree_preds, truth = Loan_Status, estimate = .pred_class)
+tree_conf_mat
+tree_metrics
+
+`````
+
+
+4.2 K-Nearest Neighbors (K-NN)
+
+Additional Preprocessing is required as the K-NN does not work well with Categorical Variable, hence we will conduct the one hot encoding of the categorical variables
+
+```{r}
+
+# One-hot encode categorical variables
+
+cat_var <- loan_data [, 1:5]
+
+dummy_vars <- dummyVars(" ~ .", data = cat_var, fullRank = TRUE)
+cat_var <- predict(dummy_vars, newdata = cat_var) %>% as.data.frame()
+
+# Combining the dummy variables with the main data
+
+loan_data_KNN <- cbind( loan_data[, -1:-5], cat_var)
+
+head(loan_data_KNN)
+
+
+```
+
+Prepare the data for KNN Modelling
+
+```{r}
+# Splitting the data into training and testing
+
+loan_split_KNN <- initial_split(loan_data_KNN, prop = 0.8, strata = Loan_Status)
+loan_train_KNN <- training(loan_split_KNN)
+loan_test_KNN <- testing(loan_split_KNN)
+
+```
+
+
+KNN Model
+
+```{r}
+
+# K-NN Model
+knn_spec <- nearest_neighbor() %>%
+  set_mode("classification") %>%
+  set_engine("kknn")
+
+knn_fit <- knn_spec %>%
+  fit(Loan_Status ~ ., data = loan_train_KNN)
+
+knn_preds <- predict(knn_fit, loan_test_KNN) %>%
+  bind_cols(loan_test_KNN)
+
+# Evaluate K-NN
+knn_metrics <- yardstick::metrics(knn_preds, truth = Loan_Status, estimate = .pred_class)
+knn_conf_mat <- yardstick::conf_mat(knn_preds, truth = Loan_Status, estimate = .pred_class)
+
+knn_conf_mat
+knn_metrics
+```
+
+
+4.3 Support Vector Machines - we use the similar dataset that was used in the KNN Model as SVM also do not work well with categorical variables
+
+```{r}
+
+# SVM Model
+svm_spec <- svm_rbf() %>%
+  set_mode("classification") %>%
+  set_engine("kernlab")
+
+svm_fit <- svm_spec %>%
+  fit(Loan_Status ~ ., data = loan_train_KNN)
+
+svm_preds <- predict(svm_fit, loan_test_KNN) %>%
+  bind_cols(loan_test_KNN)
+
+# Evaluate SVM
+svm_metrics <- yardstick::metrics(svm_preds, truth = Loan_Status, estimate = .pred_class)
+svm_conf_mat <- yardstick::conf_mat(svm_preds, truth = Loan_Status, estimate = .pred_class)
+
+svm_conf_mat
+svm_metrics
+
+```
+
+
+4.4 Logistic Regression - Using the main k-nn dataset
+
+```{r}
+# Logistic Regression Model
+log_reg_spec <- logistic_reg() %>%
+  set_mode("classification") %>%
+  set_engine("glm")
+
+log_reg_fit <- log_reg_spec %>%
+  fit(Loan_Status ~ ., data = loan_train_KNN)
+
+log_reg_preds <- predict(log_reg_fit, loan_test_KNN) %>%
+  bind_cols(loan_test_KNN)
+
+# Evaluate Logistic Regression
+log_reg_metrics <- yardstick::metrics(log_reg_preds, truth = Loan_Status, estimate = .pred_class)
+log_reg_conf_mat <- yardstick::conf_mat(log_reg_preds, truth = Loan_Status, estimate = .pred_class)
+
+log_reg_conf_mat
+log_reg_metrics
+````
+
+
+5. Comparing the performance of the various models
+
+```{r}
+
+# Compare model metrics
+all_metrics <- bind_rows(
+  tree_metrics %>% mutate(model = "Decision Tree"),
+  knn_metrics %>% mutate(model = "K-NN"),
+  svm_metrics %>% mutate(model = "SVM"),
+  log_reg_metrics %>% mutate(model = "Logistic Regression")) 
+
+# Print all metrics
+print(all_metrics)
+
+````
+
+
+
+
+
+
+
+
+
+
