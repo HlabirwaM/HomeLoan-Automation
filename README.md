@@ -174,7 +174,7 @@ One-hot encoding was used to convert categorical variables into dummy variables.
 
 The dataset was partitioned into training and testing sets with an 80:20 split ratio to ensure a robust evaluation of the machine learning models. The target variable, originally represented as 'Y' and 'N', was converted to binary values of 1 and 0, respectively, to facilitate compatibility with the classification algorithms. This conversion allows the models to effectively learn and predict the loan eligibility status based on the provided feature
 
-# Model Performance and Evaluation
+# Step 5: Model Performance and Evaluation
 
 The performance of the four machine learning models—Decision Tree, K-Nearest Neighbors (K-NN), Support Vector Machines (SVM), and Logistic Regression—was evaluated using accuracy and Cohen's kappa (kap) metrics. These metrics provide insights into how well each model performs in predicting loan eligibility.
 
