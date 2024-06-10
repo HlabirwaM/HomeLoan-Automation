@@ -1,6 +1,6 @@
 # Home Loan Qualification Prediction Using Supervised Machine Learning Algorithms
 
-### The machine learning problem was solved by following the Cross Industry Process Standards for Data Mining (CRISM-DM) Framework as outlined below:
+### The machine learning problem was solved by following the Cross Industry Process Standards for Data Mining (CRISP-DM) Framework as outlined below:
 
 <img width="586" alt="Screenshot-2016-04-20-11 58 54" src="https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/143b3816-e862-4039-aab2-7f10e0c02c65">
 
