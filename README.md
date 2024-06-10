@@ -126,9 +126,9 @@ To address this issue, it is essential to apply feature scaling techniques to no
 
 For instance, standardizing "ApplicantIncome," "CoapplicantIncome," and "LoanAmount" will transform these variables into comparable units, thereby eliminating the biases introduced by differing scales. This approach ensures that the machine learning model can appropriately weigh each feature, improving its overall performance and accuracy.
 
-### Numerical Data Skewedness
+### Numerical Data Skewness
 
-Data skewedness is a significant data quality issue that can adversely affect the performance and reliability of machine learning models. The provided boxplots and base table for "ApplicantIncome," "CoapplicantIncome," and "LoanAmount" reveal substantial skewness in these quantitative variables, which can lead to biased models and inaccurate predictions.
+Data skewness is a significant data quality issue that can adversely affect the performance and reliability of machine learning models. The provided boxplots and base table for "ApplicantIncome," "CoapplicantIncome," and "LoanAmount" reveal substantial skewness in these quantitative variables, which can lead to biased models and inaccurate predictions.
 
 The boxplot for "ApplicantIncome" demonstrates a pronounced right-skewed distribution, characterized by a long tail extending towards higher income values. This indicates that while the majority of applicants have relatively low to moderate incomes, a small number of applicants report exceptionally high incomes. The base table further supports this observation, showing a mean that is considerably higher than the median, reflecting the influence of these high-income outliers. This skewness can result in a model that is disproportionately influenced by the high-income data points, potentially leading to biased predictions that do not accurately represent the broader applicant population.
 
@@ -158,6 +158,10 @@ The dataset was examined for duplicate observations, and any duplicates found we
 
 Categorical missing values were imputed using the mode, while numerical missing values were imputed using the median. This approach ensures that the most frequent category replaces missing categorical data, maintaining the mode's integrity, and the median imputation prevents the influence of outliers on numerical data. These imputation methods preserve the dataset's distribution and prevent the loss of valuable information, making the data ready for algorithms such as Decision Trees, which can handle outliers and varying scales without requiring normalization or standardization.
 
+### Handling Outliers Using the Boxplot Method
+
+Outliers were identified and handled using the boxplot method. Boxplots are a graphical representation of data that highlight the distribution and identify extreme values or outliers. In this process, outliers were detected as points lying outside 1.5 times the interquartile range (IQR) from the first and third quartiles. Handling outliers is essential because they can skew the results of the analysis and negatively impact the performance of machine learning models. By addressing outliers—either by capping their values at acceptable limits or by treating them separately—we ensure that the data is more representative of the typical values and improve the model's robustness and accuracy.
+
 #### Standardization of Quantitative Variables
 
 Standardization was applied to transform the quantitative variables to the same scale. This step was essential for algorithms like K-Nearest Neighbors (K-NN) and Support Vector Machines (SVM), which are sensitive to the ranges of data. Standardizing the variables ensures that each feature contributes equally to the model, preventing features with larger scales from dominating the analysis.
@@ -165,6 +169,59 @@ Standardization was applied to transform the quantitative variables to the same 
 #### One-Hot Encoding for Categorical Variables
 
 One-hot encoding was used to convert categorical variables into dummy variables. This transformation is necessary for K-Nearest Neighbors, Support Vector Machines, and Logistic Regression algorithms, which cannot process categorical data directly. By creating binary columns for each category, one-hot encoding allows these algorithms to interpret and utilize categorical information effectively.
+
+# Step 4: Modeling
+
+The dataset was partitioned into training and testing sets with an 80:20 split ratio to ensure a robust evaluation of the machine learning models. The target variable, originally represented as 'Y' and 'N', was converted to binary values of 1 and 0, respectively, to facilitate compatibility with the classification algorithms. This conversion allows the models to effectively learn and predict the loan eligibility status based on the provided feature
+
+# Model Performance and Evaluation
+
+The performance of the four machine learning models—Decision Tree, K-Nearest Neighbors (K-NN), Support Vector Machines (SVM), and Logistic Regression—was evaluated using accuracy and Cohen's kappa (kap) metrics. These metrics provide insights into how well each model performs in predicting loan eligibility.
+
+### Decision Tree
+
+Accuracy: 0.782581
+Kappa: 0.4183461
+The Decision Tree classifier achieved an accuracy of approximately 78.3%, indicating that it correctly predicted the loan eligibility status for 78.3% of the instances. The kappa statistic, which measures the agreement between predicted and actual classifications while accounting for chance, is 0.418. This suggests moderate agreement beyond chance.
+
+### K-Nearest Neighbors (K-NN)
+
+Accuracy: 0.750000
+Kappa: 0.3627321
+The K-NN classifier achieved an accuracy of 75%, slightly lower than the Decision Tree. The kappa value of 0.363 indicates a fair agreement beyond chance. The performance of K-NN is slightly lower than the Decision Tree in terms of both metrics.
+
+### Support Vector Machines (SVM)
+
+Accuracy: 0.8145161
+Kappa: 0.5045170
+The SVM classifier outperformed the Decision Tree and K-NN with an accuracy of approximately 81.5%. The kappa statistic of 0.504 indicates moderate agreement beyond chance, higher than that of the Decision Tree and K-NN. This suggests that SVM provides a better balance between precision and recall.
+
+### Logistic Regression
+
+Accuracy: 0.8145161
+Kappa: 0.5123119
+Logistic Regression achieved the same accuracy as SVM, approximately 81.5%. However, it has a slightly higher kappa value of 0.512, indicating moderate agreement beyond chance. This suggests that Logistic Regression slightly outperforms SVM in terms of consistency between predicted and actual classifications.
+
+### Selection of the Best Model
+
+Based on the evaluation metrics, Logistic Regression and SVM are the top-performing models, both achieving an accuracy of 81.5%. However, Logistic Regression has a marginally higher kappa value (0.512) compared to SVM (0.504), indicating a slightly better performance in terms of agreement between predicted and actual classifications.
+
+Therefore, Logistic Regression is selected as the best model for predicting loan eligibility in this dataset. Its balance of high accuracy and kappa value demonstrates its robustness and reliability in handling this classification task. The slight edge in kappa value suggests that it offers a better balance between precision and recall, making it a more reliable choice for real-world application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
