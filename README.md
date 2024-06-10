@@ -52,7 +52,7 @@ Detailed Project Phases:
 
 We are working with historical loan data from Dream Housing Finance Company. This dataset includes various attributes related to customers and their loan applications. Our goal is to characterize and understand these variables to inform the subsequent steps in the data mining process.
 
-#### Base Table Creation
+### Base Table Creation
 
 The first step in understanding our data was to create a base table that consolidates all relevant variables. This base table includes attributes such as Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History, and others.
 
@@ -66,15 +66,33 @@ The dataset has 614 Observations and 13 variables. The Loan_ID id variable is dr
 
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/ee25ad0e-1bca-4ed6-ac48-87e889cdfc95)
 
+The analysis of the provided dataset, which contains a total of 614 observations, reveals several instances of missing values across various key variables. Addressing these missing values is critical for ensuring the robustness and reliability of the machine learning models developed from this data.
+
+The variable "Self_Employed" exhibits 32 missing values, which constitutes approximately 5.2% of the dataset. The absence of employment status information could potentially obscure important correlations between self-employment and loan eligibility. To mitigate this, imputation strategies such as replacing missing values with the most frequent category (mode) or introducing a new category to account for unknown employment statuses should be considered.
+
+The "LoanAmount" variable shows 22 missing values, representing about 3.6% of the dataset. Given that the loan amount is a critical factor in determining loan eligibility, the absence of this data can severely compromise the accuracy of any predictive model. Imputation with the median loan amount or utilizing model-based imputation techniques to estimate these missing values based on other available features is recommended.
+
+Similarly, the "Loan_Amount_Term" variable has 14 missing entries, accounting for 2.3% of the dataset. Since the loan term duration is crucial for assessing an applicant's repayment capacity, the absence of this information can lead to erroneous predictions. Imputing the missing values with the median term duration, given its common values, can help maintain the dataset's integrity.
+
+The "Credit_History" variable, with 50 missing values, poses the most significant challenge, representing 8.1% of the dataset. Credit history is a vital predictor of an applicant’s creditworthiness, and missing data in this variable can skew the model towards inaccurate predictions. Imputing these missing values with the mode or introducing a separate category for missing credit history ensures that the model can handle such cases appropriately.
+
+Variables such as "ApplicantIncome," "CoapplicantIncome," "Property_Area," and "Loan_Status" exhibit no missing values, thereby providing a reliable foundation for the model. These variables can serve as stable predictors in the machine learning process.
+
 ### Checking for Outliers using Boxplots
 
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/0cf59fcf-730a-488a-9786-35aa35e9f6e1)
 
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/c66ab67a-2ba0-49ae-b11e-64d20ce17efa)
 
-![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/dae0b4cb-ffed-49f6-865a-3146c0e52052)
-
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/11e818fe-0d09-4915-989c-d81385577290)
+
+The analysis of the provided boxplots for "ApplicantIncome," "CoapplicantIncome," and "LoanAmount" reveals the presence of significant outliers. These outliers are data points that deviate markedly from the other observations and can potentially skew the analysis and modeling processes. Addressing these outliers is crucial for maintaining data quality and ensuring accurate model performance.
+
+The boxplot for "ApplicantIncome" indicates several extreme outliers, with some values exceeding 80,000. Given that the median applicant income is substantially lower, these extreme values can disproportionately influence the mean and standard deviation, leading to skewed results. The presence of these outliers can result in a biased model that overemphasizes the importance of high-income applicants, leading to inaccurate predictions, particularly for those with average or below-average incomes. To mitigate this issue, techniques such as capping the outliers at a certain threshold, transforming the data using logarithmic or square root functions, or employing robust statistical methods that are less sensitive to extreme values should be considered.
+
+Similarly, the boxplot for "CoapplicantIncome" displays significant outliers, with some values extending beyond 40,000. These outliers can also distort the statistical analysis and model predictions, as the majority of coapplicant incomes appear to be much lower. The impact of these outliers is similar to that of the applicant incomes, potentially biasing the model towards high-income coapplicants and reducing its accuracy for the general population. Addressing these outliers through similar techniques as those suggested for applicant incomes is necessary to ensure a balanced and reliable dataset.
+
+The "LoanAmount" variable also exhibits numerous outliers, with values surpassing 600. Given that the median loan amount is significantly lower, these extreme values can skew the data distribution and affect the model's predictive power. Outliers in loan amounts can lead to a model that inaccurately predicts loan eligibility, especially for applicants requesting average loan amounts. To address this, applying transformations, capping the extreme values, or using robust statistical methods will help maintain the integrity of the dataset and enhance the model's performance.
 
 ### Checking for class imbalance in the categorical variables using Bargraphs
 
@@ -93,6 +111,60 @@ The class distributions for several key categorical variables in our dataset rev
 In contrast, the "Property Area" variable displays a relatively balanced distribution, with 29.2% of applicants from rural areas, 37.9% from semiurban areas, and 32.9% from urban areas. Although there is a slight overrepresentation of semiurban areas, this imbalance is not as pronounced and is less likely to significantly affect model performance.
 
 Addressing class imbalance is crucial for developing robust and reliable machine learning models. Techniques such as resampling (both oversampling the minority class and undersampling the majority class), applying cost-sensitive learning algorithms, and using appropriate evaluation metrics like precision, recall, F1-score, and the area under the precision-recall curve are essential. Additionally, data augmentation methods and creating more representative features can further enhance the model's ability to handle imbalanced datasets.
+
+### Checking for duplicates
+
+There was only one duplicated row 
+
+### Data in different scales
+
+The examination of the quantitative variables in the loan dataset reveals significant data quality issues related to differing scales. These variables—"ApplicantIncome," "CoapplicantIncome," and "LoanAmount"—exist on markedly different scales, which can introduce challenges in data consistency and model performance.
+
+"ApplicantIncome" is recorded in the range of hundreds to tens of thousands, with values spanning from 150 to 81,000. In contrast, "CoapplicantIncome" varies from 0 to 41,667, and "LoanAmount" ranges from 9 to 700. The disparity in scales between these variables can pose significant challenges for machine learning algorithms, which often assume that input features are on a comparable scale. When features exist on vastly different scales, models may become biased towards higher magnitude values, leading to suboptimal performance and inaccurate predictions.
+
+To address this issue, it is essential to apply feature scaling techniques to normalize the data. Standardization, which transforms the data to have a mean of zero and a standard deviation of one, is one effective approach. This technique ensures that each variable contributes equally to the model, regardless of its original scale. Alternatively, normalization, which scales the data to a fixed range (typically 0 to 1), can also be employed to achieve similar effects.
+
+For instance, standardizing "ApplicantIncome," "CoapplicantIncome," and "LoanAmount" will transform these variables into comparable units, thereby eliminating the biases introduced by differing scales. This approach ensures that the machine learning model can appropriately weigh each feature, improving its overall performance and accuracy.
+
+### Numerical Data Skewedness
+
+Data skewedness is a significant data quality issue that can adversely affect the performance and reliability of machine learning models. The provided boxplots and base table for "ApplicantIncome," "CoapplicantIncome," and "LoanAmount" reveal substantial skewness in these quantitative variables, which can lead to biased models and inaccurate predictions.
+
+The boxplot for "ApplicantIncome" demonstrates a pronounced right-skewed distribution, characterized by a long tail extending towards higher income values. This indicates that while the majority of applicants have relatively low to moderate incomes, a small number of applicants report exceptionally high incomes. The base table further supports this observation, showing a mean that is considerably higher than the median, reflecting the influence of these high-income outliers. This skewness can result in a model that is disproportionately influenced by the high-income data points, potentially leading to biased predictions that do not accurately represent the broader applicant population.
+
+Similarly, "CoapplicantIncome" exhibits a right-skewed distribution with several extreme values. The boxplot highlights the presence of high-income outliers among coapplicants, while the base table shows a mean income significantly greater than the median. This skewness can cause the model to overestimate the importance of coapplicant income, particularly those at the higher end of the distribution, thereby affecting the model’s generalizability and accuracy.
+
+The "LoanAmount" variable also shows a right-skewed distribution. The boxplot indicates a concentration of loan amounts at the lower end, with a few significantly larger loan amounts extending the tail. The base table reveals a mean loan amount that exceeds the median, further illustrating the impact of these outliers. Such skewness can bias the model towards higher loan amounts, potentially misrepresenting the typical loan applicant.
+
+To address skewedness and its impact on model performance, it is essential to apply data transformation techniques. Logarithmic or square root transformations can help normalize the distributions, reducing the influence of extreme values and bringing the data closer to a normal distribution. This adjustment ensures that the model treats all data points more equitably, enhancing the robustness and accuracy of predictions.
+
+
+# Step 3: Data Preparation
+
+Having identified and discussed the data quality issues, we now proceed to the crucial stage of data preparation for modeling. This phase involves comprehensive data preprocessing to ensure the dataset is clean, balanced, and ready for analysis. The preprocessing steps will be tailored to the specific requirements of the following machine learning classification algorithms that will be explored for this project:
+
+    Decision Tree Classifier
+    K-Nearest Neighbors (K-NN)
+    Support Vector Machines
+    Logistic Regression
+
+Our goal is to select the best-performing model from these algorithms based on their predictive accuracy and robustness.
+
+### Removing Duplicates
+
+The dataset was examined for duplicate observations, and any duplicates found were removed. This step is crucial to ensure the integrity of the data, as duplicates can distort the analysis and lead to misleading conclusions by artificially inflating the sample size.
+
+#### Handling Missing Values
+
+Categorical missing values were imputed using the mode, while numerical missing values were imputed using the median. This approach ensures that the most frequent category replaces missing categorical data, maintaining the mode's integrity, and the median imputation prevents the influence of outliers on numerical data. These imputation methods preserve the dataset's distribution and prevent the loss of valuable information, making the data ready for algorithms such as Decision Trees, which can handle outliers and varying scales without requiring normalization or standardization.
+
+#### Standardization of Quantitative Variables
+
+Standardization was applied to transform the quantitative variables to the same scale. This step was essential for algorithms like K-Nearest Neighbors (K-NN) and Support Vector Machines (SVM), which are sensitive to the ranges of data. Standardizing the variables ensures that each feature contributes equally to the model, preventing features with larger scales from dominating the analysis.
+
+#### One-Hot Encoding for Categorical Variables
+
+One-hot encoding was used to convert categorical variables into dummy variables. This transformation is necessary for K-Nearest Neighbors, Support Vector Machines, and Logistic Regression algorithms, which cannot process categorical data directly. By creating binary columns for each category, one-hot encoding allows these algorithms to interpret and utilize categorical information effectively.
 
 
 
