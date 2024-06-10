@@ -46,4 +46,36 @@ Detailed Project Phases:
 * Model Integration: Integrate the chosen model with the existing system for real-time prediction using Shiny.
 * Deployment and Monitoring: Deploy the system and monitor its performance regularly.
 
+## Step 2: Data Understanding
+
+### Data Collection
+
+#### We are working with historical loan data from Dream Housing Finance Company. This dataset includes various attributes related to customers and their loan applications. Our goal is to characterize and understand these variables to inform the subsequent steps in the data mining process.
+
+### Base Table Creation
+
+####  The first step in understanding our data was to create a base table that consolidates all relevant variables. This base table includes attributes such as Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History, and others.
+
+#### Observing the first 6 rows of the data gives a high level view of the variables 
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/f019d59c-d744-41db-be90-c653b5230e6d)
+
+#### The dataset has 614 Observations and 23 observations. The Loan_ID id variable is dropped as it adds no significant meaning to the machine learning performance.
+
+#### Checking the number of missing values per variable
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/ee25ad0e-1bca-4ed6-ac48-87e889cdfc95)
+
+### Checking for Outliers using Boxplots
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/0cf59fcf-730a-488a-9786-35aa35e9f6e1)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/c66ab67a-2ba0-49ae-b11e-64d20ce17efa)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/dae0b4cb-ffed-49f6-865a-3146c0e52052)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/11e818fe-0d09-4915-989c-d81385577290)
+
+
+
 
