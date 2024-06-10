@@ -1,6 +1,6 @@
 # Home Loan Qualification Prediction Using Supervised Machine Learning Algorithms
 
-### The machine learning problem was solved by following the Cross Industry Process Standards for Data Mining (CRISP-DM) Framework as outlined below:
+ The machine learning problem was solved by following the Cross Industry Process Standards for Data Mining (CRISP-DM) Framework as outlined below:
 
 <img width="586" alt="Screenshot-2016-04-20-11 58 54" src="https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/143b3816-e862-4039-aab2-7f10e0c02c65">
 
@@ -8,11 +8,11 @@
 
 ### Background
 
-#### Dream Housing Finance Company is a leading provider of home loans with a wide presence across urban, semi-urban, and rural areas. Customers first apply for home loans, and the company then validates their eligibility. The company aims to improve its loan eligibility process by leveraging machine learning algorithms.
+Dream Housing Finance Company is a leading provider of home loans with a wide presence across urban, semi-urban, and rural areas. Customers first apply for home loans, and the company then validates their eligibility. The company aims to improve its loan eligibility process by leveraging machine learning algorithms.
 
 ### Determine Business Objectives
 
-#### The primary objective is to automate the loan eligibility process in real-time based on customer details provided during the online application. The business success criteria include:
+The primary objective is to automate the loan eligibility process in real-time based on customer details provided during the online application. The business success criteria include:
 
 * Efficiency Improvement: Automate the eligibility process to reduce processing time by at least 50%.
 * Scalability: Enable the company to handle a larger volume of loan applications efficiently.
@@ -29,7 +29,7 @@
 
 ### Determine Data Mining Goals
 
-#### From a technical perspective, the data mining goals include:
+From a technical perspective, the data mining goals include:
 
 * Data Collection and Preparation: Gather and preprocess historical loan application data.
 * Feature Engineering: Identify and create relevant features such as Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, and Credit History.
@@ -38,7 +38,7 @@
 
 ### Produce Project Plan
 
-#### Technology and Tools Selection: Use R for data processing and machine learning, and Shiny for integrating the model with the online application system.
+Technology and Tools Selection: Use R for data processing and machine learning, and Shiny for integrating the model with the online application system.
 Detailed Project Phases:
 * Data Collection and Preprocessing: Collect data, handle missing values, and preprocess for modeling.
 * Feature Engineering: Create and select relevant features.
@@ -50,17 +50,17 @@ Detailed Project Phases:
 
 ### Data Collection
 
-#### We are working with historical loan data from Dream Housing Finance Company. This dataset includes various attributes related to customers and their loan applications. Our goal is to characterize and understand these variables to inform the subsequent steps in the data mining process.
+We are working with historical loan data from Dream Housing Finance Company. This dataset includes various attributes related to customers and their loan applications. Our goal is to characterize and understand these variables to inform the subsequent steps in the data mining process.
 
-### Base Table Creation
+#### Base Table Creation
 
-####  The first step in understanding our data was to create a base table that consolidates all relevant variables. This base table includes attributes such as Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History, and others.
+The first step in understanding our data was to create a base table that consolidates all relevant variables. This base table includes attributes such as Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History, and others.
 
-#### Observing the first 6 rows of the data gives a high level view of the variables 
+Observing the first 6 rows of the data gives a high level view of the variables 
 
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/f019d59c-d744-41db-be90-c653b5230e6d)
 
-#### The dataset has 614 Observations and 23 observations. The Loan_ID id variable is dropped as it adds no significant meaning to the machine learning performance.
+The dataset has 614 Observations and 13 variables. The Loan_ID id variable is dropped as it adds no significant meaning to the machine learning performance.The target variable is the Loan_Status that states if a client was provided with a home loan or not.
 
 #### Checking the number of missing values per variable
 
@@ -75,6 +75,24 @@ Detailed Project Phases:
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/dae0b4cb-ffed-49f6-865a-3146c0e52052)
 
 ![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/11e818fe-0d09-4915-989c-d81385577290)
+
+### Checking for class imbalance in the categorical variables using Bargraphs
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/f590f988-ffde-4a04-b6d5-cc47b1c2afe3)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/fef99d8d-6888-4026-806d-87b6581a4fe8)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/be608cb6-41e8-4137-b732-2832806a68c3)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/1b2134fa-1e67-42b8-a0ea-a768bfbac069)
+
+![image](https://github.com/HlabirwaM/Machine-Learning-Model-For-Optimising-Banking-Campaign-Strategy/assets/158508458/ef05ab0d-2a46-4259-88c1-195ff4b03c64)
+
+The class distributions for several key categorical variables in our dataset reveal significant insights and potential data quality issues related to class imbalance. For the variable "Self Employment," the majority of applicants (81.4%) are not self-employed, with only 13.4% being self-employed and 5.2% of the data missing. This stark imbalance suggests that the model may become biased towards predicting the "No" category, potentially underperforming in identifying self-employed applicants accurately. Similarly, the "Loan Status" variable exhibits a pronounced imbalance, with 68.7% of loans approved ("Yes") and only 31.3% rejected ("No"). This imbalance poses a risk of the model favoring loan approvals, which could result in overlooking cases that should be denied.
+
+In contrast, the "Property Area" variable displays a relatively balanced distribution, with 29.2% of applicants from rural areas, 37.9% from semiurban areas, and 32.9% from urban areas. Although there is a slight overrepresentation of semiurban areas, this imbalance is not as pronounced and is less likely to significantly affect model performance.
+
+Addressing class imbalance is crucial for developing robust and reliable machine learning models. Techniques such as resampling (both oversampling the minority class and undersampling the majority class), applying cost-sensitive learning algorithms, and using appropriate evaluation metrics like precision, recall, F1-score, and the area under the precision-recall curve are essential. Additionally, data augmentation methods and creating more representative features can further enhance the model's ability to handle imbalanced datasets.
 
 
 
