@@ -46,7 +46,7 @@ Detailed Project Phases:
 * Model Integration: Integrate the chosen model with the existing system for real-time prediction using Shiny.
 * Deployment and Monitoring: Deploy the system and monitor its performance regularly.
 
-## Step 2: Data Understanding
+# Step 2: Data Understanding
 
 ### Data Collection
 
